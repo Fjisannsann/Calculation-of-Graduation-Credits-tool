@@ -4,31 +4,11 @@ import re
 import unicodedata
 import os
 
-REPLACE_DICT = {
-    "Academic Engli sh": "Academic English",
-    "Practi calEngli sh": "Practical English",
-    "Academi c Engl i sh": "Academic English",
-    "Pr act i cal Engl i sh": "Practical English",
-    "I II": "III",
-}
-
 def normalize_text(text):
     text = unicodedata.normalize("NFKC", text)
     text = text.replace("\n", " ").replace("\t", " ")
-    # 数値
-    text = re.sub(r"(\d)\.\s+(\d)", r"\1.\2", text)
-    # --- ローマ数字の前にスペース ---
-    text = re.sub(r'([^\s])([IVX]+)\b', r'\1 \2', text)
-    # --- ローマ数字の崩れを先に修正 ---
-    text = re.sub(r'\bI\s+I\s+I\b', 'III', text)
-    text = re.sub(r'\bI\s+I\b', 'II', text)
-    text = re.sub(r'\bV\s+I\b', 'VI', text)
-    text = re.sub(r'\bI\s+V\b', 'IV', text)
-    # --- 辞書補正 ---
-    for k, v in REPLACE_DICT.items():
-        text = text.replace(k, v)
-    # スペース整理
-    text = re.sub(r"\s+", " ", text)
+    # スペースを削除
+    text = re.sub(r"\s+", "", text)
     return text.strip()
 
 def delete_bracket(text):
@@ -88,7 +68,7 @@ def load_with_categories(data):
 
     return data2
 
-
+# main
 pdf_path = ['haru', 'kage', 'me', 'moza']
 
 for path in pdf_path:
@@ -147,6 +127,3 @@ for path in pdf_path:
         writer.writerows(structured_data)
 
     pdf.Dispose()
-
-
-
