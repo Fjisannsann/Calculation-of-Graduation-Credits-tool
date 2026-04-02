@@ -38,6 +38,22 @@ def normalize_text(text):
 
     return text.strip()
 
+def is_header(row):
+    return row == ["科目名", "単位", "成績", "年度"]
+
+# def is_delete_row(row):
+#     text = "".join(row)
+#     return ("小計" in text or
+#             "合計" in text or
+#             "総計" in text or
+#             "累積GPA" in text or
+#             "年度GPA" in text or
+#             "学期GPA" in text
+#             )
+
+def is_valid_row(row):
+    return len(row) >= 4 and row[3].strip() != ""
+
 pdf_path = ['haru', 'kage', 'me', 'moza']
 
 for path in pdf_path:
@@ -81,9 +97,13 @@ for path in pdf_path:
     for block in blocks:
         all_rows.extend(block)
 
+    # all_rows = [row for row in all_rows if not is_header(row)]
+    # all_rows = [row for row in all_rows if not is_delete_row(row)]
+    all_rows = [row for row in all_rows if not is_header(row) and is_valid_row(row)]
+
     # --- 書き出し ---
     with open(output_path, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerows(all_rows)
 
-pdf.Dispose()
+    pdf.Dispose()
