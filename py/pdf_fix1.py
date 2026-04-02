@@ -41,15 +41,11 @@ def normalize_text(text):
 def is_header(row):
     return row == ["科目名", "単位", "成績", "年度"]
 
-
-def is_valid_row(row):
-    return len(row) >= 4 and row[3].strip() != ""
-
 pdf_path = ['haru', 'kage', 'me', 'moza']
 
 for path in pdf_path:
     full_path = os.path.join("grades", path + ".pdf")
-    output_path = os.path.join("output", path + ".csv")
+    output_path = os.path.join("output", path + "2.csv")
     pdf = PdfDocument()
     pdf.LoadFromFile(full_path)
 
@@ -88,7 +84,7 @@ for path in pdf_path:
     for block in blocks:
         all_rows.extend(block)
 
-    all_rows = [row for row in all_rows if not is_header(row) and is_valid_row(row)]
+    all_rows = [row for row in all_rows if not is_header(row)]
 
     # --- 書き出し ---
     with open(output_path, 'w', newline='', encoding='utf-8') as csvfile:
@@ -96,3 +92,54 @@ for path in pdf_path:
         writer.writerows(all_rows)
 
     pdf.Dispose()
+
+
+
+def load_with_categories(path):
+    data = []
+
+    big = None
+    middle = None
+    small = None
+
+    with open(path, encoding="utf-8") as f:
+        reader = csv.reader(f)
+
+        for row in reader:
+            if len(row) == 0:
+                continue
+
+            name = row[0]
+
+            # 大カテゴリ
+            if "【" in name and "】" in name:
+                big = name.replace("【", "").replace("】", "")
+                middle = None
+                small = None
+                continue
+
+            # 中カテゴリ
+            if "<" in name and ">" in name:
+                middle = name.replace("<", "").replace(">", "")
+                small = None
+                continue
+
+            # 小カテゴリ
+            if name.startswith("（") and name.endswith("）"):
+                small = name.replace("（", "").replace("）", "")
+                continue
+
+            # 科目
+            if len(row) >= 4 and row[3].isdigit():
+                data.append({
+                    "name": name,
+                    "credit": float(row[1]),
+                    "grade": int(row[2]),
+                    "year": int(row[3]),
+                    "big": big,
+                    "middle": middle,
+                    "small": small
+                })
+
+    return data
+
