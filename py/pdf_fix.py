@@ -2,6 +2,7 @@ from spire.pdf import PdfDocument, PdfTableExtractor
 import csv
 import re
 import unicodedata
+import os
 
 REPLACE_DICT = {
     "Academic Engli sh": "Academic English",
@@ -37,48 +38,52 @@ def normalize_text(text):
 
     return text.strip()
 
-pdf_path = 'pdf/campus.pdf'
-pdf = PdfDocument()
-pdf.LoadFromFile(pdf_path)
+pdf_path = ['haru', 'kage', 'me', 'moza']
 
-extractor = PdfTableExtractor(pdf)
+for path in pdf_path:
+    full_path = os.path.join("grades", path + ".pdf")
+    output_path = os.path.join("output", path + ".csv")
+    pdf = PdfDocument()
+    pdf.LoadFromFile(full_path)
 
-# ブロックごとに格納
-blocks = []
+    extractor = PdfTableExtractor(pdf)
 
-for pageIndex in range(pdf.Pages.Count):
-    tables = extractor.ExtractTable(pageIndex)
-    if tables is not None:
-        for tableIndex in range(len(tables)):
-            table = tables[tableIndex]
+    # ブロックごとに格納
+    blocks = []
 
-            for rowIndex in range(table.GetRowCount()):
-                row = []
-                for colIndex in range(table.GetColumnCount()):
-                    text = table.GetText(rowIndex, colIndex)
-                    text = normalize_text(text)
-                    row.append(text)
+    for pageIndex in range(pdf.Pages.Count):
+        tables = extractor.ExtractTable(pageIndex)
+        if tables is not None:
+            for tableIndex in range(len(tables)):
+                table = tables[tableIndex]
 
-                # 必要なブロック数だけ確保
-                num_blocks = (len(row) + 3) // 4
-                while len(blocks) < num_blocks:
-                    blocks.append([])
+                for rowIndex in range(table.GetRowCount()):
+                    row = []
+                    for colIndex in range(table.GetColumnCount()):
+                        text = table.GetText(rowIndex, colIndex)
+                        text = normalize_text(text)
+                        row.append(text)
 
-                # 各ブロックに追加
-                for i in range(num_blocks):
-                    chunk = row[i*4:(i+1)*4]
+                    # 必要なブロック数だけ確保
+                    num_blocks = (len(row) + 3) // 4
+                    while len(blocks) < num_blocks:
+                        blocks.append([])
 
-                    if any(cell.strip() for cell in chunk):
-                        blocks[i].append(chunk)
+                    # 各ブロックに追加
+                    for i in range(num_blocks):
+                        chunk = row[i*4:(i+1)*4]
 
-# --- ブロックを順番に連結 ---
-all_rows = []
-for block in blocks:
-    all_rows.extend(block)
+                        if any(cell.strip() for cell in chunk):
+                            blocks[i].append(chunk)
 
-# --- 書き出し ---
-with open("output/merged.csv", 'w', newline='', encoding='utf-8') as csvfile:
-    writer = csv.writer(csvfile)
-    writer.writerows(all_rows)
+    # --- ブロックを順番に連結 ---
+    all_rows = []
+    for block in blocks:
+        all_rows.extend(block)
+
+    # --- 書き出し ---
+    with open(output_path, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerows(all_rows)
 
 pdf.Dispose()
