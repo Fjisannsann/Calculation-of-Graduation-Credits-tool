@@ -14,38 +14,87 @@ REPLACE_DICT = {
 
 def normalize_text(text):
     text = unicodedata.normalize("NFKC", text)
-
     text = text.replace("\n", " ").replace("\t", " ")
-
     # 数値
     text = re.sub(r"(\d)\.\s+(\d)", r"\1.\2", text)
-
     # --- ローマ数字の前にスペース ---
     text = re.sub(r'([^\s])([IVX]+)\b', r'\1 \2', text)
-
     # --- ローマ数字の崩れを先に修正 ---
     text = re.sub(r'\bI\s+I\s+I\b', 'III', text)
     text = re.sub(r'\bI\s+I\b', 'II', text)
     text = re.sub(r'\bV\s+I\b', 'VI', text)
     text = re.sub(r'\bI\s+V\b', 'IV', text)
-
     # --- 辞書補正 ---
     for k, v in REPLACE_DICT.items():
         text = text.replace(k, v)
-
     # スペース整理
     text = re.sub(r"\s+", " ", text)
-
     return text.strip()
+
+def delete_bracket(text):
+    if "【" in text and "】" in text:
+        text = text.replace("【", "").replace("】", "")
+    if "<" in text and ">" in text:
+        text = text.replace("<", "").replace(">", "")
+    if text.startswith("（") and text.endswith("）"):
+        text = text.replace("（", "").replace("）", "")
+    return normalize_text(text)
 
 def is_header(row):
     return row == ["科目名", "単位", "成績", "年度"]
+
+def load_with_categories(data):
+    data2 = []
+
+    big = None
+    middle = None
+    small = None
+
+    for row in data:
+        if len(row) == 0:
+            continue
+
+        name = row[0]
+
+        # 大カテゴリ
+        if "【" in name and "】" in name:
+            big = delete_bracket(name)
+            middle = None
+            small = None
+            continue
+
+        # 中カテゴリ
+        if "<" in name and ">" in name:
+            middle = delete_bracket(name)
+            small = None
+            continue
+
+        # 小カテゴリ
+        if name.startswith("（") and name.endswith("）"):
+            small = delete_bracket(name)
+            continue
+
+        # 科目
+        if len(row) >= 4 and row[3].isdigit():
+            data2.append([
+                big,
+                middle,
+                small,
+                name,
+                row[1],
+                row[2],
+                row[3]
+            ])
+
+    return data2
+
 
 pdf_path = ['haru', 'kage', 'me', 'moza']
 
 for path in pdf_path:
     full_path = os.path.join("grades", path + ".pdf")
     output_path = os.path.join("output", path + "2.csv")
+    output_path2 = os.path.join("output", path + "3.csv")
     pdf = PdfDocument()
     pdf.LoadFromFile(full_path)
 
@@ -91,55 +140,13 @@ for path in pdf_path:
         writer = csv.writer(csvfile)
         writer.writerows(all_rows)
 
+    structured_data = load_with_categories(all_rows)
+
+    with open(output_path2, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerows(structured_data)
+
     pdf.Dispose()
 
 
-
-def load_with_categories(path):
-    data = []
-
-    big = None
-    middle = None
-    small = None
-
-    with open(path, encoding="utf-8") as f:
-        reader = csv.reader(f)
-
-        for row in reader:
-            if len(row) == 0:
-                continue
-
-            name = row[0]
-
-            # 大カテゴリ
-            if "【" in name and "】" in name:
-                big = name.replace("【", "").replace("】", "")
-                middle = None
-                small = None
-                continue
-
-            # 中カテゴリ
-            if "<" in name and ">" in name:
-                middle = name.replace("<", "").replace(">", "")
-                small = None
-                continue
-
-            # 小カテゴリ
-            if name.startswith("（") and name.endswith("）"):
-                small = name.replace("（", "").replace("）", "")
-                continue
-
-            # 科目
-            if len(row) >= 4 and row[3].isdigit():
-                data.append({
-                    "name": name,
-                    "credit": float(row[1]),
-                    "grade": int(row[2]),
-                    "year": int(row[3]),
-                    "big": big,
-                    "middle": middle,
-                    "small": small
-                })
-
-    return data
 
