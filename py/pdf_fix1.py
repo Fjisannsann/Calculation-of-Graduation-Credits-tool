@@ -124,6 +124,7 @@ for path in pdf_path:
 
     with open(output_path2, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
+        writer.writerow(["category_big","category_mid","3rd","subject","credits","grade","year"])
         writer.writerows(structured_data)
 
     pdf.Dispose()
