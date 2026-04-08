@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS requirement_groups (
     id INTEGER,
     type TEXT,
     name TEXT,
+    PRIMARY KEY (id),
     FOREIGN KEY (id) REFERENCES graduation_credits(id)
 )
 """)
@@ -57,8 +58,8 @@ def insert_csv(table_name, file_path):
     conn.commit()
 
 insert_csv("subjects", "database/csv/cs_subject.csv")
-insert_csv("subjects2", "database/csv/cs_subject2.csv")
-insert_csv("groups", "database/csv/cs_group.csv")
-insert_csv("graduation_credits", "database/csv/Normalization.csv")
+insert_csv("subject_flags", "database/csv/subject_flags.csv")
+insert_csv("requirement_groups", "database/csv/requirement_groups.csv")
+insert_csv("graduation_credits", "database/csv/graduation_credits.csv")
 
 conn.close()
