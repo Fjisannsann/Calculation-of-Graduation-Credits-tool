@@ -15,76 +15,30 @@ CREATE TABLE IF NOT EXISTS subjects (
 """)
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS subjects2 (
-    category_big TEXT,
-    category_mid TEXT,
-    subject TEXT PRIMARY KEY,
-    flag INTEGER
-)
-""")
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS groups (
-    group_name TEXT,
-    category_big TEXT,
-    category_mid TEXT
-)
-""")
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS requirements_big_category (
-    big_category TEXT PRIMARY KEY,
-    required_credits INTEGER
-)
-""")
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS requirements_groups (
-    group_name TEXT PRIMARY KEY,
-    required_credits INTEGER
-)
-""")
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS requirements_mid_category (
-    category_mid TEXT PRIMARY KEY,
-    required_credits INTEGER
-)
-""")
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS requirements_mid_category_flag (
-    category_mid TEXT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS subject_flags (
+    subject TEXT,
     flag INTEGER,
-    required_credits INTEGER
+    PRIMARY KEY (subject),
+    FOREIGN KEY (subject) REFERENCES subjects(subject)
 )
 """)
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS requirements_small_category (
-    category_small TEXT PRIMARY KEY,
-    required_credits INTEGER
-)
-""")
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS requirements_detail (
-    category_detail TEXT PRIMARY KEY,
-    required_credits INTEGER
-)
-""")
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS requirements_subjects (
-    subject TEXT PRIMARY KEY,
-    required_credits INTEGER
+CREATE TABLE IF NOT EXISTS requirement_groups (
+    id INTEGER,
+    type TEXT,
+    name TEXT,
+    FOREIGN KEY (id) REFERENCES graduation_credits(id)
 )
 """)
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS graduation_credits (
-    credits_full INTEGER,
-    required_credits INTEGER
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type TEXT,
+    name TEXT,
+    required_credits INTEGER,
+    flag INTEGER
 )
 """)
 
@@ -105,13 +59,6 @@ def insert_csv(table_name, file_path):
 insert_csv("subjects", "database/csv/cs_subject.csv")
 insert_csv("subjects2", "database/csv/cs_subject2.csv")
 insert_csv("groups", "database/csv/cs_group.csv")
-insert_csv("requirements_big_category", "database/csv/requirements_big_category.csv")
-insert_csv("requirements_groups", "database/csv/requirements_groups.csv")
-insert_csv("requirements_mid_category", "database/csv/requirements_mid_category.csv")
-insert_csv("requirements_subjects", "database/csv/requirements_subjects.csv")
-insert_csv("requirements_mid_category_flag", "database/csv/requirements_mid_category_flag.csv")
-insert_csv("requirements_small_category", "database/csv/requirements_small_category.csv")
-insert_csv("requirements_detail", "database/csv/requirements_detail.csv")
-insert_csv("graduation_credits", "database/csv/graduation_credits.csv")
+insert_csv("graduation_credits", "database/csv/Normalization.csv")
 
 conn.close()
