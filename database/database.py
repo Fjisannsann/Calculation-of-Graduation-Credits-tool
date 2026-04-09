@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS requirement_groups (
     id INTEGER,
     type TEXT,
     name TEXT,
-    PRIMARY KEY (id),
+    PRIMARY KEY (id, type, name),
     FOREIGN KEY (id) REFERENCES graduation_credits(id)
 )
 """)
@@ -43,7 +43,24 @@ CREATE TABLE IF NOT EXISTS graduation_credits (
 )
 """)
 
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS types (
+    type TEXT PRIMARY KEY,
+    type_name TEXT,
+    FOREIGN KEY (type) REFERENCES graduation_credits(type)
+)
+""")
 conn.commit()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS requirement_groups_new (
+    id INTEGER,
+    type TEXT,
+    name TEXT,
+    PRIMARY KEY (id, type, name),
+    FOREIGN KEY (id) REFERENCES graduation_credits(id)
+)
+""")
 
 def insert_csv(table_name, file_path):
     with open(file_path, encoding='utf-8') as csvfile:
@@ -61,5 +78,6 @@ insert_csv("subjects", "database/csv/cs_subject.csv")
 insert_csv("subject_flags", "database/csv/subject_flags.csv")
 insert_csv("requirement_groups", "database/csv/requirement_groups.csv")
 insert_csv("graduation_credits", "database/csv/graduation_credits.csv")
+insert_csv("types", "database/csv/type.csv")
 
 conn.close()
