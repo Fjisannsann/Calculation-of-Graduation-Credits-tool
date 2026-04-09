@@ -1,187 +1,216 @@
-import sqlite3
+import argparse
 import csv
+import sqlite3
 from collections import defaultdict
+from pathlib import Path
 
-# =========================
-# ① 履修データ読み込み
-# =========================
+
 def load_taken_subjects(file_path):
     subjects = []
-
     with open(file_path, encoding="utf-8") as f:
         reader = csv.DictReader(f)
-
         for row in reader:
-            # 成績0は未取得扱い
-            if row["grade"] == "" or int(row["grade"]) == 0:
+            grade_str = (row.get("grade") or "").strip()
+            if grade_str == "":
                 continue
 
-            subjects.append({
-                "subject": row["subject"],
-                "credits": float(row["credits"])
-            })
+            grade = int(float(grade_str))
+            if grade == 0:
+                continue
 
+            subjects.append(
+                {
+                    "subject": row["subject"],
+                    "credits": float(row["credits"]),
+                }
+            )
     return subjects
 
 
-# =========================
-# ② 科目 → カテゴリ取得
-# =========================
-def get_subject_info(cursor, subject):
-    cursor.execute("""
+def load_subject_info(cursor):
+    cursor.execute(
+        """
         SELECT
-            category_big,
-            category_mid,
-            category_small,
-            category_detail
-        FROM subjects
-        WHERE subject=?
-    """, (subject,))
+            s.subject,
+            s.category_big,
+            s.category_mid,
+            s.category_small,
+            s.category_detail,
+            sf.flag
+        FROM subjects s
+        LEFT JOIN subject_flags sf ON s.subject = sf.subject
+        """
+    )
 
-    return cursor.fetchone()
+    subject_map = {}
+    for subject, big, mid, small, detail, flag in cursor.fetchall():
+        subject_map[subject] = {
+            "big": big,
+            "mid": mid,
+            "small": small,
+            "detail": detail,
+            "flag": int(flag) if flag is not None else None,
+        }
+    return subject_map
 
 
-# =========================
-# ③ 単位集計
-# =========================
-def calculate_credits(cursor, taken_subjects):
-
-    credits = {
+def create_credit_bucket():
+    return {
         "big": defaultdict(float),
         "mid": defaultdict(float),
         "small": defaultdict(float),
         "detail": defaultdict(float),
-        "subject": defaultdict(float)
+        "subject": defaultdict(float),
+        "all": 0.0,
     }
 
-    for item in taken_subjects:
 
+def add_credit(credits, type_, name, value):
+    if type_ == "all":
+        credits["all"] += value
+        return
+    if name:
+        credits[type_][name] += value
+
+
+def calculate_credits(taken_subjects, subject_map):
+    credits = create_credit_bucket()
+    credits_by_flag = defaultdict(create_credit_bucket)
+
+    for item in taken_subjects:
         subject = item["subject"]
         credit = item["credits"]
-
-        info = get_subject_info(cursor, subject)
-
+        info = subject_map.get(subject)
         if info is None:
-            # DBに存在しない科目はスキップ
             continue
 
-        big, mid, small, detail = info
+        add_credit(credits, "all", None, credit)
+        add_credit(credits, "subject", subject, credit)
+        add_credit(credits, "big", info["big"], credit)
+        add_credit(credits, "mid", info["mid"], credit)
+        add_credit(credits, "small", info["small"], credit)
+        add_credit(credits, "detail", info["detail"], credit)
 
-        if big:
-            credits["big"][big] += credit
-        if mid:
-            credits["mid"][mid] += credit
-        if small:
-            credits["small"][small] += credit
-        if detail:
-            credits["detail"][detail] += credit
+        flag = info["flag"]
+        if flag is not None:
+            flagged = credits_by_flag[flag]
+            add_credit(flagged, "all", None, credit)
+            add_credit(flagged, "subject", subject, credit)
+            add_credit(flagged, "big", info["big"], credit)
+            add_credit(flagged, "mid", info["mid"], credit)
+            add_credit(flagged, "small", info["small"], credit)
+            add_credit(flagged, "detail", info["detail"], credit)
 
-        credits["subject"][subject] += credit
-
-    return credits
+    return credits, credits_by_flag
 
 
-# =========================
-# ④ グループ単位計算
-# =========================
 def calculate_group_credits(cursor, credits):
-
     group_totals = defaultdict(float)
-
-    cursor.execute("""
-        SELECT group_name, type, name
-        FROM groups
-    """)
-
-    rows = cursor.fetchall()
-
-    for group_name, type_, name in rows:
-        group_totals[group_name] += credits[type_].get(name, 0)
-
+    cursor.execute(
+        """
+        SELECT DISTINCT id, type, name
+        FROM requirement_groups
+        """
+    )
+    for req_id, type_, name in cursor.fetchall():
+        if type_ == "all":
+            group_totals[req_id] += credits["all"]
+        elif type_ in ("big", "mid", "small", "detail", "subject"):
+            group_totals[req_id] += credits[type_].get(name, 0.0)
     return group_totals
 
 
-# =========================
-# ⑤ 卒業要件チェック
-# =========================
-def check_requirements(cursor, credits, group_totals):
-
+def check_requirements(cursor, credits, credits_by_flag, group_totals):
     results = []
-
-    cursor.execute("""
-        SELECT
-            type,
-            name,
-            required_credits,
-            flag
+    cursor.execute(
+        """
+        SELECT id, type, name, required_credits, flag
         FROM graduation_credits
-    """)
+        ORDER BY id
+        """
+    )
 
-    rules = cursor.fetchall()
+    for req_id, type_, name, required, flag in cursor.fetchall():
+        required_value = float(required)
+        flag_value = int(flag) if flag not in (None, "") else None
 
-    for type_, name, required, flag in rules:
-
-        # groupの場合
         if type_ == "group":
-            current = group_totals.get(name, 0)
+            current = group_totals.get(req_id, 0.0)
+        elif type_ == "all":
+            current = credits["all"]
+        elif flag_value is not None:
+            current = credits_by_flag[flag_value][type_].get(name, 0.0)
         else:
-            current = credits[type_].get(name, 0)
+            current = credits[type_].get(name, 0.0)
 
-        shortage = required - current
-
-        results.append({
-            "type": type_,
-            "name": name,
-            "current": current,
-            "required": required,
-            "shortage": shortage
-        })
-
+        shortage = required_value - current
+        results.append(
+            {
+                "id": req_id,
+                "type": type_,
+                "name": name,
+                "current": current,
+                "required": required_value,
+                "shortage": shortage,
+                "is_ok": shortage <= 0,
+                "flag": flag_value,
+            }
+        )
     return results
 
 
-# =========================
-# ⑥ 結果表示
-# =========================
 def print_results(results):
-
     print("=== 卒業判定結果 ===\n")
-
     for r in results:
+        label = r["name"]
+        if r["flag"] is not None:
+            label = f"{label} (flag={r['flag']})"
 
-        name = r["name"]
-        current = r["current"]
-        required = r["required"]
-        shortage = r["shortage"]
-
-        if shortage > 0:
-            print(f"{name}: 不足 {shortage:.1f} 単位 (現在 {current} / 必要 {required})")
+        if r["is_ok"]:
+            print(f"{label}: OK (現在 {r['current']:.1f} / 必要 {r['required']:.1f})")
         else:
-            print(f"{name}: OK (現在 {current} / 必要 {required})")
+            print(
+                f"{label}: 不足 {r['shortage']:.1f} 単位 "
+                f"(現在 {r['current']:.1f} / 必要 {r['required']:.1f})"
+            )
+
+    all_ok = all(r["is_ok"] for r in results)
+    print("\n総合判定: " + ("卒業要件を満たしています" if all_ok else "卒業要件を満たしていません"))
 
 
-# =========================
-# main
-# =========================
+def parse_args():
+    parser = argparse.ArgumentParser(description="履修CSVから卒業要件を判定します。")
+    parser.add_argument(
+        "--csv",
+        default="output/3.csv",
+        help="判定対象の履修CSVファイル（デフォルト: output/3.csv）",
+    )
+    parser.add_argument(
+        "--db",
+        default="graduation.db",
+        help="卒業要件DBファイル（デフォルト: graduation.db）",
+    )
+    return parser.parse_args()
+
+
 def main():
+    args = parse_args()
+    csv_path = Path(args.csv)
+    db_path = Path(args.db)
 
-    # DB接続
-    conn = sqlite3.connect("graduation.db")
+    if not csv_path.exists():
+        raise FileNotFoundError(f"CSVファイルが見つかりません: {csv_path}")
+    if not db_path.exists():
+        raise FileNotFoundError(f"DBファイルが見つかりません: {db_path}")
+
+    conn = sqlite3.connect(str(db_path))
     cursor = conn.cursor()
 
-    # CSV（履修データ）
-    taken_subjects = load_taken_subjects("output/haru3.csv")
-
-    # 単位集計
-    credits = calculate_credits(cursor, taken_subjects)
-
-    # グループ計算
+    taken_subjects = load_taken_subjects(str(csv_path))
+    subject_map = load_subject_info(cursor)
+    credits, credits_by_flag = calculate_credits(taken_subjects, subject_map)
     group_totals = calculate_group_credits(cursor, credits)
-
-    # 判定
-    results = check_requirements(cursor, credits, group_totals)
-
-    # 出力
+    results = check_requirements(cursor, credits, credits_by_flag, group_totals)
     print_results(results)
 
     conn.close()

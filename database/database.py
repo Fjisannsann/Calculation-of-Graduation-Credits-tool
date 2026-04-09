@@ -43,6 +43,13 @@ CREATE TABLE IF NOT EXISTS graduation_credits (
 )
 """)
 
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS types (
+    type TEXT PRIMARY KEY,
+    type_name TEXT,
+    FOREIGN KEY (type) REFERENCES graduation_credits(type)
+)
+""")
 conn.commit()
 
 def insert_csv(table_name, file_path):
