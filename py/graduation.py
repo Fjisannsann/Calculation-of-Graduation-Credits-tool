@@ -7,7 +7,7 @@ from pathlib import Path
 
 def load_taken_subjects(file_path):
     subjects = []
-    with open(file_path, encoding="utf-8") as f:
+    with open(file_path, encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         for row in reader:
             grade_str = (row.get("grade") or "").strip()
@@ -15,43 +15,46 @@ def load_taken_subjects(file_path):
                 continue
 
             grade = int(float(grade_str))
-            if grade == 0:
+            # 0/1 は落単扱いで単位に含めない
+            if grade <= 1:
                 continue
 
-            subjects.append(
-                {
-                    "subject": row["subject"],
-                    "credits": float(row["credits"]),
-                }
-            )
+            row["credits"] = float(row["credits"])
+            subjects.append(row)
     return subjects
 
 
-def load_subject_info(cursor):
+def load_type_map(cursor):
+    cursor.execute("SELECT type, type_name FROM types")
+    return {type_: type_name for type_, type_name in cursor.fetchall()}
+
+
+def load_subject_flag_map(cursor):
+    cursor.execute("SELECT subject, flag FROM subject_flags")
+    return {subject: int(flag) for subject, flag in cursor.fetchall()}
+
+
+def load_subject_category_map(cursor):
     cursor.execute(
         """
         SELECT
-            s.subject,
-            s.category_big,
-            s.category_mid,
-            s.category_small,
-            s.category_detail,
-            sf.flag
-        FROM subjects s
-        LEFT JOIN subject_flags sf ON s.subject = sf.subject
+            subject,
+            category_big,
+            category_mid,
+            category_small,
+            category_detail
+        FROM subjects
         """
     )
-
-    subject_map = {}
-    for subject, big, mid, small, detail, flag in cursor.fetchall():
-        subject_map[subject] = {
-            "big": big,
-            "mid": mid,
-            "small": small,
-            "detail": detail,
-            "flag": int(flag) if flag is not None else None,
+    return {
+        subject: {
+            "category_big": (big or "").strip(),
+            "category_mid": (mid or "").strip(),
+            "category_small": (small or "").strip(),
+            "category_detail": (detail or "").strip(),
         }
-    return subject_map
+        for subject, big, mid, small, detail in cursor.fetchall()
+    }
 
 
 def create_credit_bucket():
@@ -65,41 +68,58 @@ def create_credit_bucket():
     }
 
 
-def add_credit(credits, type_, name, value):
-    if type_ == "all":
-        credits["all"] += value
-        return
-    if name:
-        credits[type_][name] += value
+def resolve_row_attribute(row, type_name, subject_category_map):
+    subject = (row.get("subject") or "").strip()
+    subject_categories = subject_category_map.get(subject, {})
+
+    if type_name == "all":
+        return None
+    if type_name == "category_subject":
+        return subject
+    if type_name == "category_small":
+        # output/*3.csv に category_small がないため subjects で補完
+        return (
+            row.get("category_small")
+            or row.get("3rd")
+            or subject_categories.get("category_small")
+            or ""
+        ).strip()
+    if type_name == "category_detail":
+        # output/*3.csv に detail 列がない場合は subjects.category_detail を補完利用
+        return (
+            row.get("category_detail")
+            or row.get("3rd")
+            or subject_categories.get("category_detail")
+            or ""
+        ).strip()
+    return ((row.get(type_name) or subject_categories.get(type_name) or "")).strip()
 
 
-def calculate_credits(taken_subjects, subject_map):
+def calculate_credits(taken_subjects, type_map, subject_flag_map, subject_category_map):
     credits = create_credit_bucket()
     credits_by_flag = defaultdict(create_credit_bucket)
 
     for item in taken_subjects:
-        subject = item["subject"]
         credit = item["credits"]
-        info = subject_map.get(subject)
-        if info is None:
-            continue
 
-        add_credit(credits, "all", None, credit)
-        add_credit(credits, "subject", subject, credit)
-        add_credit(credits, "big", info["big"], credit)
-        add_credit(credits, "mid", info["mid"], credit)
-        add_credit(credits, "small", info["small"], credit)
-        add_credit(credits, "detail", info["detail"], credit)
+        credits["all"] += credit
+        for type_, type_name in type_map.items():
+            if type_ in ("all", "group"):
+                continue
+            key = resolve_row_attribute(item, type_name, subject_category_map)
+            if key:
+                credits[type_][key] += credit
 
-        flag = info["flag"]
+        flag = subject_flag_map.get((item.get("subject") or "").strip())
         if flag is not None:
             flagged = credits_by_flag[flag]
-            add_credit(flagged, "all", None, credit)
-            add_credit(flagged, "subject", subject, credit)
-            add_credit(flagged, "big", info["big"], credit)
-            add_credit(flagged, "mid", info["mid"], credit)
-            add_credit(flagged, "small", info["small"], credit)
-            add_credit(flagged, "detail", info["detail"], credit)
+            flagged["all"] += credit
+            for type_, type_name in type_map.items():
+                if type_ in ("all", "group"):
+                    continue
+                key = resolve_row_attribute(item, type_name, subject_category_map)
+                if key:
+                    flagged[type_][key] += credit
 
     return credits, credits_by_flag
 
@@ -207,8 +227,15 @@ def main():
     cursor = conn.cursor()
 
     taken_subjects = load_taken_subjects(str(csv_path))
-    subject_map = load_subject_info(cursor)
-    credits, credits_by_flag = calculate_credits(taken_subjects, subject_map)
+    type_map = load_type_map(cursor)
+    subject_flag_map = load_subject_flag_map(cursor)
+    subject_category_map = load_subject_category_map(cursor)
+    credits, credits_by_flag = calculate_credits(
+        taken_subjects,
+        type_map,
+        subject_flag_map,
+        subject_category_map,
+    )
     group_totals = calculate_group_credits(cursor, credits)
     results = check_requirements(cursor, credits, credits_by_flag, group_totals)
     print_results(results)
