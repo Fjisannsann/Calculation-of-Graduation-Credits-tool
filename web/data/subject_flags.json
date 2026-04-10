@@ -1,0 +1,38 @@
+[
+  {
+    "subject": "微分積分I",
+    "flag": "1"
+  },
+  {
+    "subject": "線形代数I",
+    "flag": "1"
+  },
+  {
+    "subject": "微分積分II",
+    "flag": "1"
+  },
+  {
+    "subject": "線形代数II",
+    "flag": "1"
+  },
+  {
+    "subject": "解析入門I",
+    "flag": "1"
+  },
+  {
+    "subject": "解析入門II",
+    "flag": "1"
+  },
+  {
+    "subject": "離散数学入門",
+    "flag": "1"
+  },
+  {
+    "subject": "確率統計",
+    "flag": "1"
+  },
+  {
+    "subject": "応用数理概論I",
+    "flag": "1"
+  }
+]
