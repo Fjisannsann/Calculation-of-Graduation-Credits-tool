@@ -1,0 +1,548 @@
+[
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科基礎科目",
+    "category_detail": "",
+    "subject": "プログラミング基礎演習I"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科基礎科目",
+    "category_detail": "",
+    "subject": "情報数学I"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科基礎科目",
+    "category_detail": "",
+    "subject": "データ構造とアルゴリズムI"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科基礎科目",
+    "category_detail": "",
+    "subject": "プログラミング基礎演習II"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科基礎科目",
+    "category_detail": "",
+    "subject": "データ構造とアルゴリズムII"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科基礎科目",
+    "category_detail": "",
+    "subject": "形式言語とオートマトン"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科基礎科目",
+    "category_detail": "",
+    "subject": "離散数学"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科基礎科目",
+    "category_detail": "",
+    "subject": "計算機システム"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科基礎科目",
+    "category_detail": "",
+    "subject": "微分積分・線形代数演習"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科基礎科目",
+    "category_detail": "",
+    "subject": "データ構造とアルゴリズム演習"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科基礎科目",
+    "category_detail": "",
+    "subject": "情報数学II"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "領域導入科目",
+    "category_detail": "",
+    "subject": "情報科学概論1"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "領域導入科目",
+    "category_detail": "",
+    "subject": "情報科学概論2"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "領域導入科目",
+    "category_detail": "",
+    "subject": "情報科学概論3"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "人工知能"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "実践数値計算"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "言語処理系"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "情報論理学"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "オブジェクト指向型言語"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "計算理論"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "情報セキュリティ"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "機械学習"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "情報理論"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "情報科学応用数学"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "確率モデリング"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専门科目",
+    "category_detail": "基礎理論系科室",
+    "subject": "プログラミング言語論"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "アルゴリズム解析"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "暗号理論"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "基礎理論系科目",
+    "subject": "符号理論"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "ソフトウェア構成論"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "コンピュータネットワーク"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "ソフトウェア設計論"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "コンピュータアーキテクチャ基礎論"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "オペレーティングシステム"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "インターネット"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "ソフトウェア工学"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "並列処理"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "現代計算機アーキテクチャ"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "無線ネットワーク"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "VLSI設計"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "アーキテクチャ系科目",
+    "subject": "分散処理"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "データベース"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "信号処理"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "UsabilityEngineering"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "画像処理"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "HCI"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "ネットワークダイナミクス"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "知的エージェント"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "パターン認識"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "データマイニング"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "音響・音声信号処理"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "感性工学"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "バーチャルリアリティ"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "コンピュータグラフィクス"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "ネットワーク科学"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "コンテンツ系科目",
+    "subject": "自然言語処理"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学科専門科目",
+    "category_detail": "実験科目",
+    "subject": "システムプログラミング実験"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "実験科目",
+    "category_detail": "",
+    "subject": "応用プログラミング実験"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "ゼミナール",
+    "category_detail": "",
+    "subject": "情報科学ゼミナール"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "特別研究",
+    "category_detail": "",
+    "subject": "情報科学特別研究1"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "特別研究",
+    "category_detail": "",
+    "subject": "情報科学特別研究2"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学部共通科目",
+    "category_detail": "",
+    "subject": "情報と職業"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学部共通科目",
+    "category_detail": "",
+    "subject": "科学技術英語第一"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学部共通科目",
+    "category_detail": "",
+    "subject": "科学技術英語第二"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学部共通科目",
+    "category_detail": "",
+    "subject": "システムデザイン論"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学部共通科目",
+    "category_detail": "",
+    "subject": "工学倫理"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学部共通科目",
+    "category_detail": "",
+    "subject": "経営工学概論"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学部共通科目",
+    "category_detail": "",
+    "subject": "産業と法規"
+  },
+  {
+    "category_big": "専門教育科目",
+    "category_mid": "専門教育科目",
+    "category_small": "学部共通科目",
+    "category_detail": "",
+    "subject": "インターンシップ"
+  },
+  {
+    "category_big": "基礎科目",
+    "category_mid": "理系共通基礎科目",
+    "category_small": "",
+    "category_detail": "",
+    "subject": "微分積分I"
+  },
+  {
+    "category_big": "基礎科目",
+    "category_mid": "理系共通基礎科目",
+    "category_small": "",
+    "category_detail": "",
+    "subject": "線形代数I"
+  },
+  {
+    "category_big": "基礎科目",
+    "category_mid": "理系共通基礎科目",
+    "category_small": "",
+    "category_detail": "",
+    "subject": "微分積分II"
+  },
+  {
+    "category_big": "基礎科目",
+    "category_mid": "理系共通基礎科目",
+    "category_small": "",
+    "category_detail": "",
+    "subject": "線形代数II"
+  },
+  {
+    "category_big": "基礎科目",
+    "category_mid": "理系共通基礎科目",
+    "category_small": "",
+    "category_detail": "",
+    "subject": "解析入門I"
+  },
+  {
+    "category_big": "基礎科目",
+    "category_mid": "理系共通基礎科目",
+    "category_small": "",
+    "category_detail": "",
+    "subject": "解析入門II"
+  },
+  {
+    "category_big": "基礎科目",
+    "category_mid": "理系共通基礎科目",
+    "category_small": "",
+    "category_detail": "",
+    "subject": "離散数学入門"
+  },
+  {
+    "category_big": "基礎科目",
+    "category_mid": "理系共通基礎科目",
+    "category_small": "",
+    "category_detail": "",
+    "subject": "確率統計"
+  },
+  {
+    "category_big": "基礎科目",
+    "category_mid": "理系共通基礎科目",
+    "category_small": "",
+    "category_detail": "",
+    "subject": "応用数理概論I"
+  }
+]

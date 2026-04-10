@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>卒業要件判定ツール（ブラウザ完結）</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>卒業要件判定ツール</h1>
+      <p class="muted">
+        成績PDFの読み取り・CSV化・卒業判定をブラウザ内で実行します（サーバー不要）。
+      </p>
+
+      <section class="card">
+        <h2>1. PDFを選択</h2>
+        <input id="pdf-input" type="file" accept="application/pdf" multiple />
+        <button id="run-button" type="button">CSV化と卒業判定を実行</button>
+        <p id="status" class="muted"></p>
+      </section>
+
+      <section class="card">
+        <h2>2. 生成CSV</h2>
+        <div id="csv-downloads" class="downloads"></div>
+      </section>
+
+      <section class="card">
+        <h2>3. 卒業判定結果</h2>
+        <div id="summary"></div>
+        <div class="table-wrap">
+          <table id="result-table">
+            <thead>
+              <tr>
+                <th>要件</th>
+                <th>現在</th>
+                <th>必要</th>
+                <th>不足</th>
+                <th>判定</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
