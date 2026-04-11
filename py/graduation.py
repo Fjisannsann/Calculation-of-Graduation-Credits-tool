@@ -245,3 +245,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+## python3 py/graduation.py --csv output/me3.csv
