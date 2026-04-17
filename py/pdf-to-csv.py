@@ -69,7 +69,7 @@ def load_with_categories(data):
     return data2
 
 # main
-pdf_path = ['haru', 'kage', 'me', 'moza']
+pdf_path = ['haru', 'kage', 'me', 'moza', 'ize']
 
 for path in pdf_path:
     full_path = os.path.join("grades", path + ".pdf")
