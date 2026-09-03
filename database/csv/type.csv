@@ -1,0 +1,8 @@
+type,type_name
+big,category_big
+mid,category_mid
+small,category_small
+detail,category_detail
+group,group
+subject,category_subject
+all,all
